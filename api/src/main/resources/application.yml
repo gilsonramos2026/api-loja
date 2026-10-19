@@ -1,10 +1,55 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+
 spring:
+  application:
+    name: ecommerce-api
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/store_bd
+    url: jdbc:postgresql://localhost:5432/ecommerce_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 20000
+
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+
+application:
+  jwt:
+    secret: c29tZS12ZXJ5LWxvbmctYW5kLXNlY3VyZS1zZWNyZXQta2V5LWZvci1qd3QtaG1hYy1zaGEyNTYtc2lnbmluZw==
+    expiration-ms: 86400000          # 24h
+    refresh-expiration-ms: 604800000 # 7 days
+  cors:
+    allowed-origins: http://localhost:5173,http://localhost:8081,http://localhost:19006
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.ecommerce.api: INFO
+    org.springframework.security: WARN
